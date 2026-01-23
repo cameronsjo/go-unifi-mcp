@@ -4,6 +4,9 @@
 # Direnv
 .direnv/
 
+# Node (prettier pre-commit hook)
+node_modules/
+
 # Test coverage
 coverage.out
 
