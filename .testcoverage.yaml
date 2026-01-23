@@ -1,0 +1,5 @@
+profile: coverage.out
+
+threshold:
+  total: 95
+  file: 90

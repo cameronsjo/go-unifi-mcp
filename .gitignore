@@ -1,0 +1,21 @@
+# Temporary files
+.tmp/
+
+# Direnv
+.direnv/
+
+# Test coverage
+coverage.out
+
+# Binary
+go-unifi-mcp
+
+# Nix result link
+result
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

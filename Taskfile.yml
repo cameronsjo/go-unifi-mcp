@@ -1,0 +1,33 @@
+version: "3"
+
+tasks:
+  lint:
+    desc: Run linters via pre-commit
+    cmds:
+      - scripts/lint
+
+  test:
+    desc: Run tests
+    cmds:
+      - go test ./...
+
+  coverage:
+    desc: Run tests with coverage and check thresholds
+    cmds:
+      - go test -coverprofile=coverage.out ./...
+      - go-test-coverage --config .testcoverage.yaml
+
+  generate:
+    desc: Run go generate
+    cmds:
+      - go generate ./...
+
+  build:
+    desc: Build the binary
+    cmds:
+      - go build -o go-unifi-mcp ./cmd/go-unifi-mcp
+
+  sync-gounifi:
+    desc: Sync types from go-unifi (placeholder for Phase 2)
+    cmds:
+      - cmd: echo "TODO - Implement in Phase 2"

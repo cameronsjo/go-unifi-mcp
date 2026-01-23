@@ -1,0 +1,30 @@
+version: "2"
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gosimple
+    - gofmt
+    - goimports
+    - misspell
+    - unconvert
+    - unparam
+    - gocritic
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/claytono/go-unifi-mcp
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  formats:
+    - format: colored-line-number
+  sort-results: true
