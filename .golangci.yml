@@ -14,7 +14,6 @@ linters:
   exclusions:
     paths:
       - internal/gounifi
-      - internal/tools/generated
 
 formatters:
   enable:
@@ -23,4 +22,3 @@ formatters:
   exclusions:
     paths:
       - internal/gounifi
-      - internal/tools/generated
