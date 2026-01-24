@@ -7,13 +7,15 @@ linters:
     - ineffassign
     - staticcheck
     - unused
-    - gosimple
-    - gofmt
-    - goimports
     - misspell
     - unconvert
     - unparam
     - gocritic
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
 
 linters-settings:
   goimports:
@@ -26,5 +28,5 @@ issues:
 
 output:
   formats:
-    - format: colored-line-number
+    colored-line-number: {}
   sort-results: true

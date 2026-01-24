@@ -27,7 +27,35 @@ tasks:
     cmds:
       - go build -o go-unifi-mcp ./cmd/go-unifi-mcp
 
-  sync-gounifi:
-    desc: Sync types from go-unifi (placeholder for Phase 2)
+  sync-go-unifi:
+    desc: Sync codegen from filipowm/go-unifi
+    vars:
+      VERSION:
+        sh: cat .go-unifi-version
+      HEADER: |
+        // Code vendored from github.com/filipowm/go-unifi/codegen
+        // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
+        // DO NOT EDIT - synced via: task sync-go-unifi
+        // Source version: {{.VERSION}}
     cmds:
-      - cmd: echo "TODO - Implement in Phase 2"
+      - rm -rf .tmp/go-unifi
+      - git clone --depth 1 --branch {{.VERSION}}
+        https://github.com/filipowm/go-unifi.git .tmp/go-unifi
+      # Preserve README, remove old Go files
+      - mkdir -p internal/gounifi
+      - find internal/gounifi -name '*.go' -delete
+      - find internal/gounifi -name '*.tmpl' -delete
+      - find internal/gounifi -name '*.yml' -delete
+      - rm -rf internal/gounifi/v2
+      # Copy and patch Go files
+      - |
+        for f in resources.go validation.go customize.go generator.go clients.go utils.go; do
+          echo '{{.HEADER}}' | cat - .tmp/go-unifi/codegen/$f | \
+          sed 's/^package main$/package gounifi/' > internal/gounifi/$f
+        done
+      # Copy templates and config
+      - cp .tmp/go-unifi/codegen/*.tmpl internal/gounifi/
+      - cp .tmp/go-unifi/codegen/customizations.yml internal/gounifi/
+      # Copy v2 custom resources
+      - cp -r .tmp/go-unifi/codegen/v2 internal/gounifi/
+      - echo "Synced go-unifi codegen {{.VERSION}}"

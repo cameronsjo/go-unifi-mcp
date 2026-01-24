@@ -6,7 +6,7 @@
       "customType": "regex",
       "fileMatch": ["^\\.go-unifi-version$"],
       "matchStrings": ["(?<currentValue>v[0-9.]+)"],
-      "depNameTemplate": "paultyng/go-unifi",
+      "depNameTemplate": "filipowm/go-unifi",
       "datasourceTemplate": "github-releases"
     },
     {
