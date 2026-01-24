@@ -2,6 +2,7 @@
 // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
 // DO NOT EDIT - synced via: task sync-go-unifi
 // Source version: v1.8.1
+//nolint:all
 
 package gounifi
 
@@ -336,7 +337,7 @@ func normalizeValidation(re string) string {
 
 var skippable = []string{"AuthenticationRequest.json", "Setting.json", "Wall.json"}
 
-func buildResourcesFromDownloadedFields(fieldsDir string, customizer CodeCustomizer, v2 bool) ([]*Resource, error) {
+func BuildResourcesFromDownloadedFields(fieldsDir string, customizer CodeCustomizer, v2 bool) ([]*Resource, error) {
 	fieldsFiles, err := os.ReadDir(fieldsDir)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read fields directory %s: %w", fieldsDir, err)
@@ -378,8 +379,8 @@ func buildResourcesFromDownloadedFields(fieldsDir string, customizer CodeCustomi
 	return resources, nil
 }
 
-func buildCustomResources(dir string, customizer CodeCustomizer, v2 bool) ([]*Resource, error) {
-	return buildResourcesFromDownloadedFields(dir, customizer, v2)
+func BuildCustomResources(dir string, customizer CodeCustomizer, v2 bool) ([]*Resource, error) {
+	return BuildResourcesFromDownloadedFields(dir, customizer, v2)
 }
 
 func customizeBaseType(resource *Resource) {

@@ -1,5 +1,6 @@
-// Local addition to support vendored code that references 'log'
-// This file is NOT from go-unifi and won't be overwritten by sync
+// Code vendored from github.com/filipowm/go-unifi/codegen
+// Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
+// DO NOT EDIT - synced via: task sync-go-unifi
 
 package gounifi
 

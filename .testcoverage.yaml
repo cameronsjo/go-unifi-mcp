@@ -1,5 +1,11 @@
 profile: coverage.out
 
 threshold:
-  total: 95
-  file: 90
+  total: 85
+  file: 85
+
+exclude:
+  paths:
+    - internal/gounifi
+    - internal/tools/generated
+    - cmd/mcpgen

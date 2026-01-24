@@ -2,6 +2,7 @@
 // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
 // DO NOT EDIT - synced via: task sync-go-unifi
 // Source version: v1.8.1
+//nolint:all
 
 package gounifi
 

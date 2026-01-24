@@ -13,11 +13,17 @@ repos:
       - id: prettier
         types_or: [json, markdown, yaml]
 
-  - repo: https://github.com/golangci/golangci-lint
-    rev: v2.8.0
+  - repo: local
     hooks:
       - id: golangci-lint
-        args: [--fix]
+        name: golangci-lint
+        entry:
+          bash -c 'export GOPATH="$(pwd)/.go" GOMODCACHE="$(pwd)/.go/pkg/mod"
+          GOCACHE="$(pwd)/.go/cache" && nix develop --command golangci-lint run
+          --fix ./...'
+        language: system
+        pass_filenames: false
+        files: \.go$
         exclude: ^internal/gounifi/
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
@@ -35,11 +41,12 @@ repos:
       - id: go-test-coverage
         name: go-test-coverage
         entry:
-          bash -c 'go test -coverprofile=coverage.out ./... && go-test-coverage
-          --config .testcoverage.yaml'
+          bash -c 'export GOPATH="$(pwd)/.go" GOMODCACHE="$(pwd)/.go/pkg/mod"
+          GOCACHE="$(pwd)/.go/cache" && nix develop --command bash -c "go test
+          -coverprofile=coverage.out ./... && go-test-coverage --config
+          .testcoverage.yaml"'
         language: system
         pass_filenames: false
-        stages: [pre-push]
         files: \.go$
 
       - id: beads-flush

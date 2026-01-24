@@ -2,6 +2,7 @@
 // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
 // DO NOT EDIT - synced via: task sync-go-unifi
 // Source version: v1.8.1
+//nolint:all
 
 package gounifi
 
@@ -52,7 +53,7 @@ func generateCode(fieldsDir, outDir string, customizer CodeCustomizer) error {
 	}
 
 	generators := make([]Generatable, 0)
-	resources, err := buildResourcesFromDownloadedFields(fieldsDir, customizer, false)
+	resources, err := BuildResourcesFromDownloadedFields(fieldsDir, customizer, false)
 	if err != nil {
 		return fmt.Errorf("failed to build resources from downloaded fields: %w", err)
 	}
@@ -61,7 +62,7 @@ func generateCode(fieldsDir, outDir string, customizer CodeCustomizer) error {
 	if err != nil {
 		return fmt.Errorf("failed to find codegen directory: %w", err)
 	}
-	resourcesCustomV2, err := buildCustomResources(filepath.Join(codegenPath, "v2"), customizer, true)
+	resourcesCustomV2, err := BuildCustomResources(filepath.Join(codegenPath, "v2"), customizer, true)
 	if err != nil {
 		return fmt.Errorf("failed to build resources from downloaded fields: %w", err)
 	}

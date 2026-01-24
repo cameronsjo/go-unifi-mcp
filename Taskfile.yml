@@ -1,6 +1,24 @@
 version: "3"
 
 tasks:
+  download-fields:
+    desc: Download UniFi API field definitions
+    deps: [sync-go-unifi]
+    vars:
+      # UniFi Controller version for field definitions (tested version from go-unifi)
+      UNIFI_VERSION: 9.0.114
+    env:
+      GOPATH: "{{.ROOT_DIR}}/.go"
+      GOMODCACHE: "{{.ROOT_DIR}}/.go/pkg/mod"
+      GOCACHE: "{{.ROOT_DIR}}/.go/cache"
+    cmds:
+      - rm -rf .tmp/fields
+      - mkdir -p .tmp/fields
+      - cd .tmp/go-unifi && go run ./codegen -version-base-dir ../fields
+        -download-only {{.UNIFI_VERSION}}
+      - echo "Downloaded field definitions for UniFi {{.UNIFI_VERSION}} to
+        .tmp/fields/"
+
   lint:
     desc: Run linters via pre-commit
     cmds:
@@ -18,9 +36,23 @@ tasks:
       - go-test-coverage --config .testcoverage.yaml
 
   generate:
-    desc: Run go generate
+    desc: Generate MCP tool handlers from UniFi API specs
+    deps: [download-fields]
+    env:
+      GOPATH: "{{.ROOT_DIR}}/.go"
+      GOMODCACHE: "{{.ROOT_DIR}}/.go/pkg/mod"
+      GOCACHE: "{{.ROOT_DIR}}/.go/cache"
     cmds:
-      - go generate ./...
+      - go run ./cmd/mcpgen -fields .tmp/fields -v2 internal/gounifi/v2 -out
+        internal/tools/generated
+    sources:
+      - cmd/mcpgen/**/*.go
+      - internal/mcpgen/**/*.go
+      - internal/mcpgen/templates/*.tmpl
+      - internal/gounifi/v2/*.json
+      - .tmp/fields/**/*.json
+    generates:
+      - internal/tools/generated/*.go
 
   build:
     desc: Build the binary
@@ -37,6 +69,7 @@ tasks:
         // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
         // DO NOT EDIT - synced via: task sync-go-unifi
         // Source version: {{.VERSION}}
+        //nolint:all
     cmds:
       - rm -rf .tmp/go-unifi
       - git clone --depth 1 --branch {{.VERSION}}
@@ -58,4 +91,25 @@ tasks:
       - cp .tmp/go-unifi/codegen/customizations.yml internal/gounifi/
       # Copy v2 custom resources
       - cp -r .tmp/go-unifi/codegen/v2 internal/gounifi/
+      # Export private functions we need for mcpgen
+      - |
+        perl -i -pe 's/func buildResourcesFromDownloadedFields/func BuildResourcesFromDownloadedFields/g' internal/gounifi/resources.go
+        perl -i -pe 's/buildResourcesFromDownloadedFields\(/BuildResourcesFromDownloadedFields(/g' internal/gounifi/resources.go
+        perl -i -pe 's/func buildCustomResources/func BuildCustomResources/g' internal/gounifi/resources.go
+        perl -i -pe 's/buildCustomResources\(/BuildCustomResources(/g' internal/gounifi/resources.go
+        perl -i -pe 's/buildResourcesFromDownloadedFields\(/BuildResourcesFromDownloadedFields(/g' internal/gounifi/generator.go
+        perl -i -pe 's/buildCustomResources\(/BuildCustomResources(/g' internal/gounifi/generator.go
+      # Create log.go with logrus logger
+      - |
+        cat > internal/gounifi/log.go << 'EOF'
+        // Code vendored from github.com/filipowm/go-unifi/codegen
+        // Licensed under MPL-2.0 - https://github.com/filipowm/go-unifi/blob/main/LICENSE
+        // DO NOT EDIT - synced via: task sync-go-unifi
+
+        package gounifi
+
+        import "github.com/sirupsen/logrus"
+
+        var log = logrus.New()
+        EOF
       - echo "Synced go-unifi codegen {{.VERSION}}"
