@@ -12,6 +12,134 @@ assistants and other MCP clients to interact with your UniFi infrastructure.
 
 This project is under development. See the issue tracker for current progress.
 
+## Installation
+
+### Binary (GitHub Releases)
+
+Download pre-built binaries from the
+[Releases page](https://github.com/claytono/go-unifi-mcp/releases). Binaries are
+available for macOS and Linux (amd64/arm64).
+
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_arm64.tar.gz | tar xz
+sudo mv go-unifi-mcp /usr/local/bin/
+
+# macOS (Intel)
+curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_amd64.tar.gz | tar xz
+sudo mv go-unifi-mcp /usr/local/bin/
+
+# Linux (amd64)
+curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_amd64.tar.gz | tar xz
+sudo mv go-unifi-mcp /usr/local/bin/
+
+# Linux (arm64)
+curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_arm64.tar.gz | tar xz
+sudo mv go-unifi-mcp /usr/local/bin/
+```
+
+### Docker
+
+Multi-architecture images (amd64/arm64) are published to GitHub Container
+Registry.
+
+```bash
+# Latest (pinned to most recent release, rebuilt on base image updates)
+docker pull ghcr.io/claytono/go-unifi-mcp:latest
+
+# Edge (built from main on every merge, unstable)
+docker pull ghcr.io/claytono/go-unifi-mcp:edge
+```
+
+### Go Install
+
+```bash
+go install github.com/claytono/go-unifi-mcp/cmd/go-unifi-mcp@latest
+```
+
+## Configuration
+
+### UniFi Credentials
+
+The server requires access to a UniFi Network Controller. Two authentication
+methods are supported:
+
+1. **API Key** (preferred): Create an API key in your UniFi controller under
+   Settings > Control Plane > Integrations. Set `UNIFI_HOST` and
+   `UNIFI_API_KEY`.
+
+2. **Username/Password**: Use a local admin account. Set `UNIFI_HOST`,
+   `UNIFI_USERNAME`, and `UNIFI_PASSWORD`.
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+**Using the binary:**
+
+```json
+{
+  "mcpServers": {
+    "unifi": {
+      "command": "/usr/local/bin/go-unifi-mcp",
+      "env": {
+        "UNIFI_HOST": "https://your-controller:443",
+        "UNIFI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+**Using Docker:**
+
+```json
+{
+  "mcpServers": {
+    "unifi": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "UNIFI_HOST",
+        "-e",
+        "UNIFI_API_KEY",
+        "ghcr.io/claytono/go-unifi-mcp:latest"
+      ],
+      "env": {
+        "UNIFI_HOST": "https://your-controller:443",
+        "UNIFI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+```bash
+claude mcp add unifi -- go-unifi-mcp
+```
+
+Then set the required environment variables in your shell before running
+`claude`.
+
+### Environment Variables
+
+| Variable           | Required | Default   | Description                     |
+| ------------------ | -------- | --------- | ------------------------------- |
+| `UNIFI_HOST`       | Yes      | —         | UniFi controller URL            |
+| `UNIFI_API_KEY`    | \*       | —         | API key (preferred auth method) |
+| `UNIFI_USERNAME`   | \*       | —         | Username for password auth      |
+| `UNIFI_PASSWORD`   | \*       | —         | Password for password auth      |
+| `UNIFI_SITE`       | No       | `default` | UniFi site name                 |
+| `UNIFI_VERIFY_SSL` | No       | `true`    | Whether to verify SSL certs     |
+
+\* Either `UNIFI_API_KEY` or both `UNIFI_USERNAME` and `UNIFI_PASSWORD` must be
+set.
+
 ## Development
 
 ### Prerequisites

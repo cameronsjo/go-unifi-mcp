@@ -29,6 +29,12 @@
       "matchDatasources": ["go"],
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true
+    },
+    {
+      "description": "Automerge Docker digest updates",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
     }
   ]
 }
