@@ -146,6 +146,8 @@ def update_go_test_coverage():
         [
             "shell",
             "nixpkgs#nix-prefetch-github",
+            "nixpkgs#nix",
+            "nixpkgs#nix-prefetch-git",
             "--command",
             "nix-prefetch-github",
             "vladopajic",
