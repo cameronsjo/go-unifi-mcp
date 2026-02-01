@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/claytono/go-unifi-mcp/internal/query"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -36,9 +37,30 @@ func GenericList(client any, resourceName string) server.ToolHandlerFunc {
 			return mcp.NewToolResultError(err.Error()), nil
 		}
 
-		data, err := json.MarshalIndent(results[0].Interface(), "", "  ")
+		queryOpts := query.ParseOptions(req.GetArguments())
+
+		if !queryOpts.HasQuery() {
+			// Fast path: no double-marshal when no query params
+			data, err := json.MarshalIndent(results[0].Interface(), "", "  ")
+			if err != nil {
+				return mcp.NewToolResultError(fmt.Sprintf("failed to marshal response: %v", err)), nil
+			}
+			return mcp.NewToolResultText(string(data)), nil
+		}
+
+		// Query path: marshal → filter → re-marshal
+		raw, err := json.Marshal(results[0].Interface())
 		if err != nil {
 			return mcp.NewToolResultError(fmt.Sprintf("failed to marshal response: %v", err)), nil
+		}
+		var items []map[string]any
+		if err := json.Unmarshal(raw, &items); err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to process response for filtering: %v", err)), nil
+		}
+		items = query.Apply(items, queryOpts)
+		data, err := json.MarshalIndent(items, "", "  ")
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("failed to marshal filtered response: %v", err)), nil
 		}
 		return mcp.NewToolResultText(string(data)), nil
 	}

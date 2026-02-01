@@ -457,16 +457,26 @@ func TestGenericUpdate_UnexpectedParameters(t *testing.T) {
 	assert.Contains(t, content.Text, "extra")
 }
 
+type testListItem struct {
+	Name string `json:"name"`
+	IP   string `json:"ip"`
+	Type string `json:"type"`
+}
+
 // FakeTestClient provides methods we can use for reflection-based testing.
 type FakeTestClient struct {
 	ShouldError bool
 }
 
-func (c *FakeTestClient) ListTest(_ context.Context, _ string) ([]any, error) {
+func (c *FakeTestClient) ListTest(_ context.Context, _ string) ([]testListItem, error) {
 	if c.ShouldError {
 		return nil, errors.New("list error")
 	}
-	return []any{"item1", "item2"}, nil
+	return []testListItem{
+		{Name: "switch-1", IP: "10.0.0.1", Type: "usw"},
+		{Name: "ap-living-room", IP: "10.0.0.2", Type: "uap"},
+		{Name: "amazon-echo", IP: "10.0.0.3", Type: "uap"},
+	}, nil
 }
 
 func (c *FakeTestClient) GetTest(_ context.Context, _, _ string) (any, error) {
@@ -556,8 +566,9 @@ func TestGenericList_WithFakeClient(t *testing.T) {
 	assert.False(t, result.IsError)
 
 	content := result.Content[0].(mcp.TextContent)
-	assert.Contains(t, content.Text, "item1")
-	assert.Contains(t, content.Text, "item2")
+	assert.Contains(t, content.Text, "switch-1")
+	assert.Contains(t, content.Text, "ap-living-room")
+	assert.Contains(t, content.Text, "amazon-echo")
 }
 
 func TestGenericList_WithFakeClient_Error(t *testing.T) {
@@ -787,4 +798,133 @@ func TestGenericDelete_WithFakeClient_Error(t *testing.T) {
 
 	content := result.Content[0].(mcp.TextContent)
 	assert.Contains(t, content.Text, "delete error")
+}
+
+func TestGenericList_WithFilter(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"filter": map[string]any{"type": "usw"},
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "switch-1")
+	assert.NotContains(t, content.Text, "ap-living-room")
+	assert.NotContains(t, content.Text, "amazon-echo")
+}
+
+func TestGenericList_WithContainsFilter(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"filter": map[string]any{"name": map[string]any{"contains": "amazon"}},
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "amazon-echo")
+	assert.NotContains(t, content.Text, "switch-1")
+}
+
+func TestGenericList_WithRegexFilter(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"filter": map[string]any{"name": map[string]any{"regex": "^ap-.*"}},
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "ap-living-room")
+	assert.NotContains(t, content.Text, "switch-1")
+	assert.NotContains(t, content.Text, "amazon-echo")
+}
+
+func TestGenericList_WithSearch(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"search": "living",
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "ap-living-room")
+	assert.NotContains(t, content.Text, "switch-1")
+	assert.NotContains(t, content.Text, "amazon-echo")
+}
+
+func TestGenericList_WithFields(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"fields": []any{"name", "ip"},
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "name")
+	assert.Contains(t, content.Text, "ip")
+	assert.NotContains(t, content.Text, "\"type\"")
+}
+
+func TestGenericList_WithCombinedQuery(t *testing.T) {
+	client := &FakeTestClient{}
+	handler := GenericList(client, "Test")
+
+	req := mcp.CallToolRequest{}
+	req.Params.Arguments = map[string]any{
+		"site":   "default",
+		"filter": map[string]any{"type": "uap"},
+		"search": "echo",
+		"fields": []any{"name", "ip"},
+	}
+
+	result, err := handler(context.Background(), req)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.IsError)
+
+	content := result.Content[0].(mcp.TextContent)
+	assert.Contains(t, content.Text, "amazon-echo")
+	assert.Contains(t, content.Text, "10.0.0.3")
+	assert.NotContains(t, content.Text, "\"type\"")
+	assert.NotContains(t, content.Text, "switch-1")
+	assert.NotContains(t, content.Text, "ap-living-room")
 }

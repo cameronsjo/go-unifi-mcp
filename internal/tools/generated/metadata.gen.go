@@ -26,6 +26,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -159,6 +173,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -356,6 +384,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -489,6 +531,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -696,6 +752,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -853,6 +923,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -1038,6 +1122,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -1190,6 +1288,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -1224,6 +1336,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -1415,6 +1541,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -1560,6 +1700,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -1909,6 +2063,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -2042,6 +2210,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -2299,6 +2481,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -2449,6 +2645,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -2598,6 +2808,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -3081,6 +3305,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -3222,6 +3460,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -3519,6 +3771,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -3735,6 +4001,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -3860,6 +4140,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -5725,6 +6019,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -5954,6 +6262,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -6381,6 +6703,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -6617,6 +6953,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -6818,6 +7168,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -10310,6 +10674,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -10446,6 +10824,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -10579,6 +10971,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -10816,6 +11222,20 @@ var AllToolMetadata = []ToolMetadata{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
 				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
+				},
 			},
 		},
 	},
@@ -10959,6 +11379,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -11119,6 +11553,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
@@ -11905,6 +12353,20 @@ var AllToolMetadata = []ToolMetadata{
 				"site": map[string]any{
 					"type":        "string",
 					"description": "UniFi site name (default: 'default')",
+				},
+				"filter": map[string]any{
+					"type":                 "object",
+					"description":          "Filter by field values. Exact match: {\"field\": \"value\"}, substring: {\"field\": {\"contains\": \"substr\"}}, regex: {\"field\": {\"regex\": \"pattern\"}}",
+					"additionalProperties": true,
+				},
+				"fields": map[string]any{
+					"type":        "array",
+					"description": "Field names to include in results. Omit for all fields.",
+					"items":       map[string]any{"type": "string"},
+				},
+				"search": map[string]any{
+					"type":        "string",
+					"description": "Case-insensitive text search across top-level string field values",
 				},
 			},
 		},
