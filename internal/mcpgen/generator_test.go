@@ -249,7 +249,8 @@ func TestGenerate_WithMockFields(t *testing.T) {
 
 	// Verify list tool descriptions include enum filter hints where applicable
 	// V2 resources (DNSRecord, FirewallZonePolicy) have enum fields that should appear as hints
-	assert.Contains(t, string(metadataContent), "Filterable enums: record_type (A|AAAA|CNAME|MX|NS|PTR|SOA|SRV|TXT).",
+	// Use regex to avoid brittleness if upstream enum values change order or gain entries
+	assert.Regexp(t, `Filterable enums:.*record_type \(`, string(metadataContent),
 		"list tool description should include filterable enum hints for resources with enums")
 }
 
