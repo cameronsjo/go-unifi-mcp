@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"text/template"
 
 	"github.com/claytono/go-unifi-mcp/internal/gounifi"
@@ -156,6 +157,7 @@ func renderTemplate(templatePath, outputPath string, data interface{}) error {
 			return false
 		},
 		"fieldProperty": fieldPropertyFunc,
+		"enumFilterHint": enumFilterHintFunc,
 	}
 
 	tmpl, err := template.New(filepath.Base(templatePath)).Funcs(funcMap).Parse(string(content))
@@ -322,6 +324,22 @@ func parseEnumValues(pattern string) []string {
 		values = append(values, current)
 	}
 	return values
+}
+
+// enumFilterHintFunc builds a description suffix listing filterable enum fields.
+// Example output: " Filterable enums: purpose (corporate|guest|wan), type (bridge|nat)"
+// Returns empty string if no enum fields exist.
+func enumFilterHintFunc(fields []FieldSchema) string {
+	var hints []string
+	for _, f := range fields {
+		if len(f.Enum) > 0 {
+			hints = append(hints, f.Name+" ("+strings.Join(f.Enum, "|")+")")
+		}
+	}
+	if len(hints) == 0 {
+		return ""
+	}
+	return " Filterable enums: " + strings.Join(hints, ", ") + "."
 }
 
 // fieldPropertyFunc generates the mcp.With* call for a field schema.

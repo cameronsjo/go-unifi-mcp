@@ -246,6 +246,12 @@ func TestGenerate_WithMockFields(t *testing.T) {
 	require.NoError(t, err)
 	assert.Contains(t, string(metadataContent), "Network")
 	assert.Contains(t, string(metadataContent), "AllToolMetadata")
+
+	// Verify list tool descriptions include enum filter hints where applicable
+	// V2 resources (DNSRecord, FirewallZonePolicy) have enum fields that should appear as hints
+	// Use regex to avoid brittleness if upstream enum values change order or gain entries
+	assert.Regexp(t, `Filterable enums:.*record_type \(`, string(metadataContent),
+		"list tool description should include filterable enum hints for resources with enums")
 }
 
 func TestGenerate_MissingV2Dir(t *testing.T) {
@@ -1007,6 +1013,60 @@ func TestRenderTemplate_FormatError(t *testing.T) {
 		t.Logf("Got error (not format): %v", err)
 	}
 	assert.Error(t, err)
+}
+
+func TestEnumFilterHintFunc(t *testing.T) {
+	tests := []struct {
+		name   string
+		fields []FieldSchema
+		want   string
+	}{
+		{
+			name:   "no fields",
+			fields: nil,
+			want:   "",
+		},
+		{
+			name: "no enum fields",
+			fields: []FieldSchema{
+				{Name: "name", Type: "string"},
+				{Name: "port", Type: "integer"},
+			},
+			want: "",
+		},
+		{
+			name: "single enum field",
+			fields: []FieldSchema{
+				{Name: "purpose", Type: "string", Enum: []string{"corporate", "guest", "wan"}},
+			},
+			want: " Filterable enums: purpose (corporate|guest|wan).",
+		},
+		{
+			name: "multiple enum fields",
+			fields: []FieldSchema{
+				{Name: "name", Type: "string"},
+				{Name: "protocol", Type: "string", Enum: []string{"tcp", "udp"}},
+				{Name: "purpose", Type: "string", Enum: []string{"corporate", "guest"}},
+			},
+			want: " Filterable enums: protocol (tcp|udp), purpose (corporate|guest).",
+		},
+		{
+			name: "mixed fields with only some enums",
+			fields: []FieldSchema{
+				{Name: "enabled", Type: "boolean"},
+				{Name: "type", Type: "string", Enum: []string{"bridge", "nat"}},
+				{Name: "ip", Type: "string", Pattern: "^[0-9.]+$"},
+			},
+			want: " Filterable enums: type (bridge|nat).",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := enumFilterHintFunc(tt.fields)
+			assert.Equal(t, tt.want, got)
+		})
+	}
 }
 
 func TestFieldPropertyFunc(t *testing.T) {
