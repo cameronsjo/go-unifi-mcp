@@ -3,14 +3,15 @@
 ## Supported Versions
 
 | Version | Supported |
-|---------|-----------|
+| ------- | --------- |
 | Latest  | Yes       |
 
 ## Reporting a Vulnerability
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, use [GitHub's private vulnerability reporting](https://github.com/claytono/go-unifi-mcp/security/advisories/new)
+Instead, use
+[GitHub's private vulnerability reporting](https://github.com/claytono/go-unifi-mcp/security/advisories/new)
 to submit a report.
 
 ### What to Include
@@ -22,11 +23,11 @@ to submit a report.
 
 ### Response Timeline
 
-| Stage            | Target    |
-|------------------|-----------|
-| Acknowledgment   | 48 hours  |
-| Initial triage   | 7 days    |
-| Fix release      | 30 days   |
+| Stage          | Target   |
+| -------------- | -------- |
+| Acknowledgment | 48 hours |
+| Initial triage | 7 days   |
+| Fix release    | 30 days  |
 
 ## Disclosure Policy
 
