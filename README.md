@@ -42,37 +42,10 @@ range; see their
 
 ## Installation
 
-### Binary (GitHub Releases)
-
-Download pre-built binaries from the
-[Releases page](https://github.com/cameronsjo/go-unifi-mcp/releases). Binaries
-are available for macOS and Linux (amd64/arm64).
+### Go Install
 
 ```bash
-# macOS (Apple Silicon)
-curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_arm64.tar.gz | tar xz
-sudo mv go-unifi-mcp /usr/local/bin/
-
-# macOS (Intel)
-curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_amd64.tar.gz | tar xz
-sudo mv go-unifi-mcp /usr/local/bin/
-
-# Linux (amd64)
-curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_amd64.tar.gz | tar xz
-sudo mv go-unifi-mcp /usr/local/bin/
-
-# Linux (arm64)
-curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_arm64.tar.gz | tar xz
-sudo mv go-unifi-mcp /usr/local/bin/
-```
-
-### Homebrew
-
-Available from the
-[cameronsjo/homebrew-tap](https://github.com/cameronsjo/homebrew-tap) tap:
-
-```bash
-brew install cameronsjo/tap/go-unifi-mcp
+go install github.com/cameronsjo/go-unifi-mcp/cmd/go-unifi-mcp@latest
 ```
 
 ### Nix
@@ -85,24 +58,16 @@ nix run github:cameronsjo/go-unifi-mcp
 nix profile install github:cameronsjo/go-unifi-mcp
 ```
 
-### Docker
+### Coming Soon
 
-Multi-architecture images (amd64/arm64) are published to GitHub Container
-Registry.
+The following install methods will be available after the first release is
+tagged:
 
-```bash
-# Latest (pinned to most recent release, rebuilt on base image updates)
-docker pull ghcr.io/cameronsjo/go-unifi-mcp:latest
-
-# Edge (built from main on every merge, unstable)
-docker pull ghcr.io/cameronsjo/go-unifi-mcp:edge
-```
-
-### Go Install
-
-```bash
-go install github.com/cameronsjo/go-unifi-mcp/cmd/go-unifi-mcp@latest
-```
+- **Binary releases** —
+  [Releases page](https://github.com/cameronsjo/go-unifi-mcp/releases)
+  (macOS/Linux, amd64/arm64)
+- **Homebrew** — `brew install cameronsjo/tap/go-unifi-mcp`
+- **Docker** — `docker pull ghcr.io/cameronsjo/go-unifi-mcp:latest`
 
 ## Configuration
 
@@ -138,7 +103,7 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-**Using Docker:**
+**Using Docker** (available after first release):
 
 ```json
 {
