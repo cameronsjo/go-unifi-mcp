@@ -61,7 +61,7 @@ jobs:
           # Build and push a multi-arch image
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
-            --tag "ghcr.io/claytono/go-unifi-mcp:edge" \
+            --tag "ghcr.io/cameronsjo/go-unifi-mcp:edge" \
             --label "org.opencontainers.image.title=go-unifi-mcp" \
             --label "org.opencontainers.image.description=MCP server for UniFi Network Controller" \
             --label "org.opencontainers.image.version=${VERSION}" \
