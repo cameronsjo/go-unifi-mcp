@@ -156,7 +156,7 @@ func renderTemplate(templatePath, outputPath string, data interface{}) error {
 			}
 			return false
 		},
-		"fieldProperty": fieldPropertyFunc,
+		"fieldProperty":  fieldPropertyFunc,
 		"enumFilterHint": enumFilterHintFunc,
 	}
 
