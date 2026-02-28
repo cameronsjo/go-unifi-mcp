@@ -40,11 +40,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract release notes
+      - name: Extract release notes from GitHub Release
         run: |
           mkdir -p .tmp
-          VERSION="${GITHUB_REF_NAME#v}"
-          nix develop --command kacl-cli get "$VERSION" > .tmp/release-notes.md
+          gh release view "${GITHUB_REF_NAME}" --json body --jq '.body' > .tmp/release-notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Homebrew Tap Token
         id: app-token

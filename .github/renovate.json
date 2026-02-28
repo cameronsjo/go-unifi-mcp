@@ -44,14 +44,16 @@
       "customType": "regex",
       "fileMatch": ["^flake\\.nix$"],
       "matchStrings": [
-        "pname\\s*=\\s*\"python-kacl\";[\\s\\S]*?version\\s*=\\s*\"(?<currentValue>[^\"]+)\";"
+        "mkMcpPublisher\\s*=\\s*pkgs:\\s*let\\s*version\\s*=\\s*\"(?<currentValue>[^\"]+)\";"
       ],
-      "depNameTemplate": "schmieder.matthias/python-kacl",
-      "datasourceTemplate": "gitlab-tags",
-      "registryUrlTemplate": "https://gitlab.com"
+      "depNameTemplate": "modelcontextprotocol/registry",
+      "datasourceTemplate": "github-releases"
     }
   ],
-  "gitIgnoredAuthors": ["github-actions[bot]@users.noreply.github.com"],
+  "gitIgnoredAuthors": [
+    "github-actions[bot]@users.noreply.github.com",
+    "release-please[bot]@users.noreply.github.com"
+  ],
   "packageRules": [
     {
       "description": "Automerge pre-commit hook updates",
