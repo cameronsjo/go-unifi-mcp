@@ -22,7 +22,7 @@ var AllToolMetadata = []ToolMetadata{
 {{- if has "List" .Operations }}
 	{
 		Name:        "list_{{ $snake }}",
-		Description: "List all {{ $name }} resources",
+		Description: "List all {{ $name }} resources.{{ enumFilterHint $fields }}",
 		Category:    "list",
 		Resource:    "{{ $name }}",
 {{- if $isSetting }}
