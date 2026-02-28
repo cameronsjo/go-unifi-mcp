@@ -30,7 +30,7 @@ repos:
         entry:
           bash -c 'export GOPATH="$(pwd)/.go" GOMODCACHE="$(pwd)/.go/pkg/mod"
           GOCACHE="$(pwd)/.go/cache" && nix develop --command golangci-lint run
-          --fix ./...'
+          ./...'
         language: system
         pass_filenames: false
         files: \.go$
