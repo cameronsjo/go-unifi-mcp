@@ -1,7 +1,23 @@
 # go-unifi-mcp
 
+> **Fork of [claytono/go-unifi-mcp](https://github.com/claytono/go-unifi-mcp)**
+> with enhanced tool discoverability and fork-specific distribution.
+
 A Model Context Protocol (MCP) server for UniFi Network Controller, written in
 Go.
+
+## Fork Enhancements
+
+This fork adds the following on top of upstream:
+
+- **Filterable enum hints** — List tool descriptions now surface which fields
+  support enum filtering and their valid values (e.g.,
+  `Filterable enums: purpose (corporate|guest|wan)`), making it easier for LLMs
+  to construct targeted queries without trial and error
+- **Homebrew tap** — Install via `brew install cameronsjo/tap/go-unifi-mcp`
+- **Docker images** — Published to `ghcr.io/cameronsjo/go-unifi-mcp`
+- **CI fixes** — Removed broken `python-kacl` pre-commit hook (incompatible with
+  Python 3.13)
 
 ## Overview
 
@@ -29,44 +45,44 @@ range; see their
 ### Binary (GitHub Releases)
 
 Download pre-built binaries from the
-[Releases page](https://github.com/claytono/go-unifi-mcp/releases). Binaries are
-available for macOS and Linux (amd64/arm64).
+[Releases page](https://github.com/cameronsjo/go-unifi-mcp/releases). Binaries
+are available for macOS and Linux (amd64/arm64).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_arm64.tar.gz | tar xz
+curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_arm64.tar.gz | tar xz
 sudo mv go-unifi-mcp /usr/local/bin/
 
 # macOS (Intel)
-curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_amd64.tar.gz | tar xz
+curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_darwin_amd64.tar.gz | tar xz
 sudo mv go-unifi-mcp /usr/local/bin/
 
 # Linux (amd64)
-curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_amd64.tar.gz | tar xz
+curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_amd64.tar.gz | tar xz
 sudo mv go-unifi-mcp /usr/local/bin/
 
 # Linux (arm64)
-curl -L https://github.com/claytono/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_arm64.tar.gz | tar xz
+curl -L https://github.com/cameronsjo/go-unifi-mcp/releases/latest/download/go-unifi-mcp_linux_arm64.tar.gz | tar xz
 sudo mv go-unifi-mcp /usr/local/bin/
 ```
 
 ### Homebrew
 
 Available from the
-[claytono/homebrew-tap](https://github.com/claytono/homebrew-tap) tap:
+[cameronsjo/homebrew-tap](https://github.com/cameronsjo/homebrew-tap) tap:
 
 ```bash
-brew install claytono/tap/go-unifi-mcp
+brew install cameronsjo/tap/go-unifi-mcp
 ```
 
 ### Nix
 
 ```bash
 # Run without installing
-nix run github:claytono/go-unifi-mcp
+nix run github:cameronsjo/go-unifi-mcp
 
 # Install to your profile
-nix profile install github:claytono/go-unifi-mcp
+nix profile install github:cameronsjo/go-unifi-mcp
 ```
 
 ### Docker
@@ -76,16 +92,16 @@ Registry.
 
 ```bash
 # Latest (pinned to most recent release, rebuilt on base image updates)
-docker pull ghcr.io/claytono/go-unifi-mcp:latest
+docker pull ghcr.io/cameronsjo/go-unifi-mcp:latest
 
 # Edge (built from main on every merge, unstable)
-docker pull ghcr.io/claytono/go-unifi-mcp:edge
+docker pull ghcr.io/cameronsjo/go-unifi-mcp:edge
 ```
 
 ### Go Install
 
 ```bash
-go install github.com/claytono/go-unifi-mcp/cmd/go-unifi-mcp@latest
+go install github.com/cameronsjo/go-unifi-mcp/cmd/go-unifi-mcp@latest
 ```
 
 ## Configuration
@@ -137,7 +153,7 @@ Add to your `claude_desktop_config.json`:
         "UNIFI_HOST",
         "-e",
         "UNIFI_API_KEY",
-        "ghcr.io/claytono/go-unifi-mcp:latest"
+        "ghcr.io/cameronsjo/go-unifi-mcp:latest"
       ],
       "env": {
         "UNIFI_HOST": "https://your-controller:443",
@@ -298,7 +314,7 @@ can filter on fields that are excluded from the output:
 
 ```bash
 # Clone the repository
-git clone https://github.com/claytono/go-unifi-mcp.git
+git clone https://github.com/cameronsjo/go-unifi-mcp.git
 cd go-unifi-mcp
 
 # Enter the development environment
@@ -388,7 +404,11 @@ MCP server.
 
 ## Credits
 
-This project builds upon:
+This fork is based on
+[claytono/go-unifi-mcp](https://github.com/claytono/go-unifi-mcp) by Clayton
+O'Neill.
+
+The project builds upon:
 
 - [go-unifi](https://github.com/paultyng/go-unifi) - Go client library for UniFi
   Network Controller
