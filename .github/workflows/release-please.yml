@@ -1,0 +1,20 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@a02a34c4d625f9be7cb89f4291f2343e4ef36a42 # v4.2.0
+        with:
+          release-type: go
+          # Fork continues upstream semver — first fork release will be v0.3.0
+          last-release-sha: b0a8260c9053b5e3e09f17fe0f7a7e8f65bbcd76

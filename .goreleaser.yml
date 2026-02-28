@@ -53,6 +53,8 @@ brews:
       bin.install "go-unifi-mcp"
 
 release:
+  # Release Please creates the GitHub Release; goreleaser attaches artifacts
+  mode: keep-existing
   footer: |
     Tool generation target: UniFi Controller {{ trim (mustReadFile ".tmp/unifi-controller-version") }} (from go-unifi {{ trim (mustReadFile ".go-unifi-version") }})
 

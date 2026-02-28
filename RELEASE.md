@@ -1,113 +1,53 @@
-# Release Rules
+# Release Process
 
-Read this document when preparing a new release.
+This project uses [Release Please](https://github.com/googleapis/release-please)
+for automated releases.
 
-## 1. Review Changes Since Last Release
+## How It Works
 
-Identify the most recent release tag and review all commits since then:
+### Every Push to Main
 
-```bash
-gh release list --limit 1
-git log --oneline <last-tag>..HEAD
-```
+1. **Edge builds**: The `edge.yml` workflow builds snapshot binaries and pushes a
+   `ghcr.io/cameronsjo/go-unifi-mcp:edge` Docker image
+2. **Release PR**: Release Please creates or updates a pull request that bumps the
+   version and updates `CHANGELOG.md` based on
+   [Conventional Commits](https://www.conventionalcommits.org/)
 
-For each merged PR, read the PR description and understand the user-facing
-impact. Categorize each change for the changelog (see section 3).
+### Cutting a Stable Release
 
-## 2. Determine the Next Version
+Merge the Release Please PR. This automatically:
 
-This project follows [Semantic Versioning](https://semver.org/):
+1. Creates a GitHub Release with the new tag (e.g., `v0.3.0`)
+2. Triggers `release.yml`, which runs GoReleaser to:
+   - Build binaries for linux/darwin (amd64/arm64)
+   - Push Docker images to `ghcr.io/cameronsjo/go-unifi-mcp`
+   - Update the Homebrew formula in `cameronsjo/homebrew-tap`
+3. Publishes to the MCP Registry
 
-- **Patch** (0.1.1 → 0.1.2): Bug fixes, dependency updates, internal refactoring
-  with no behavior change
-- **Minor** (0.1.2 → 0.2.0): New features, new tools, new configuration options,
-  new capabilities
-- **Major** (0.x → 1.0): Reserved for stable API declaration; breaking changes
-  while pre-1.0 bump minor
+### Commit Message Convention
 
-Present the proposed version with rationale to the user for approval.
+Release Please determines version bumps from commit prefixes:
 
-## 3. Write Changelog Entries
+| Prefix | Version Bump | Example |
+| ------ | ------------ | ------- |
+| `fix:` | Patch (0.3.0 → 0.3.1) | `fix: resolve nil pointer in device list` |
+| `feat:` | Minor (0.3.0 → 0.4.0) | `feat: add zone policy tools` |
+| `feat!:` or `BREAKING CHANGE:` | Major (0.x → 1.0) | `feat!: rename tool_index to catalog` |
+| `chore:`, `docs:`, `ci:` | No release | `ci: update golangci-lint` |
 
-Add a new version section to `CHANGELOG.md` in
-[Keep a Changelog](https://keepachangelog.com/) format, validated by
-[kacl-cli](https://gitlab.com/schmieder.matthias/python-kacl) (runs as a
-pre-commit hook).
+## Post-Release Verification
 
-Categories (use only those that apply):
+After the release workflow completes:
 
-- **Added** — new features or capabilities
-- **Changed** — changes to existing functionality
-- **Deprecated** — features marked for future removal
-- **Removed** — features removed in this release
-- **Fixed** — bug fixes
-- **Security** — vulnerability fixes
-
-For housekeeping (Renovate dependency bumps, CI pipeline changes, and other
-non-user-facing work), use **Changed** and summarize rather than listing
-individually (e.g. "Pin and update GitHub Actions dependencies").
-
-Writing style:
-
-- Start each entry with an active verb (Add, Fix, Update, Remove, etc.)
-- Reference PR numbers: `Add widget support (#42)`
-- **Be verbose and descriptive.** Each user-facing entry should explain what the
-  feature does, why it matters, and include concrete examples (before/after,
-  sample arguments, representative output) so a reader understands the change
-  without reading the code.
-- Housekeeping entries under Changed are the exception — keep them to one
-  summary line per group.
-
-Add the new version's comparison link at the bottom of `CHANGELOG.md`:
-
-```markdown
-[X.Y.Z]: https://github.com/claytono/go-unifi-mcp/releases/tag/vX.Y.Z
-```
-
-## 4. Audit the README
-
-Before releasing, review `README.md` against the changes in this release:
-
-- Verify all new features, configuration options, and environment variables are
-  documented
-- Verify examples are accurate and reflect current behavior
-- Verify tool counts and other concrete numbers are still correct
-- Flag any gaps to the user before proceeding with the release
-
-## 5. Pre-Release Checklist
-
-- [ ] Changelog entries are complete and accurate
-- [ ] Version link added at bottom of `CHANGELOG.md`
-- [ ] README is up to date with all changes in this release
-- [ ] Open PR with release changes, merge to main
-
-## 6. Tag the Release
-
-After the PR merges, update main, verify the merge commit is correct, then tag:
-
-```bash
-git checkout main
-git pull
-git log --oneline -3  # verify the merge commit contains the release changes
-git tag -a vX.Y.Z -m "vX.Y.Z: brief summary"
-git push origin vX.Y.Z
-```
-
-## 7. Post-Release Verification
-
-After pushing the tag, the release workflow runs automatically. Verify:
-
-- [ ] CI passes: `gh run watch --exit-status`
-- [ ] Release created: `gh release view vX.Y.Z`
+- [ ] Release created: `gh release view <tag>`
 - [ ] Docker image published:
-      `gh api orgs/claytono/packages/container/go-unifi-mcp/versions --jq '.[0].metadata.container.tags'`
-- [ ] Homebrew formula updated: check `claytono/homebrew-tap` for commit
+      `gh api user/packages/container/go-unifi-mcp/versions --jq '.[0].metadata.container.tags'`
+- [ ] Homebrew formula updated: check `cameronsjo/homebrew-tap` for commit
 - [ ] MCP Registry published (runs as part of release workflow)
 
-## 8. If Something Goes Wrong
+## If Something Goes Wrong
 
-- **Bad release notes**: Edit via `gh release edit vX.Y.Z --notes-file <file>`
-- **Broken binary/image**: Fix the issue on main, then create a patch release
-  following this same process
+- **Bad release notes**: Edit via `gh release edit <tag> --notes-file <file>`
+- **Broken binary/image**: Fix the issue on main, then cut a patch release
 - **Wrong tag**: Delete and retag only if the release workflow hasn't completed;
   otherwise cut a new patch release

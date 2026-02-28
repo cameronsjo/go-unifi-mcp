@@ -66,38 +66,6 @@
         };
       };
 
-      # python-kacl for changelog validation and extraction
-      mkPythonKacl = pkgs: pkgs.python3Packages.buildPythonApplication rec {
-        pname = "python-kacl";
-        version = "0.7.0";
-        pyproject = true;
-
-        src = pkgs.fetchFromGitLab {
-          owner = "schmieder.matthias";
-          repo = "python-kacl";
-          rev = "v${version}";
-          name = "python-kacl-source";
-          hash = "sha256-BJ4SlpiRL5InRJKc2gufCnYXjGlaQebXSHDeBegKY/I=";
-        };
-
-        build-system = with pkgs.python3Packages; [ setuptools ];
-
-        dependencies = with pkgs.python3Packages; [
-          click
-          semver
-          gitpython
-          pyyaml
-          jira
-        ];
-
-        doCheck = false;
-
-        meta = {
-          description = "CLI tool to manage changelogs in Keep a Changelog format";
-          homepage = "https://gitlab.com/schmieder.matthias/python-kacl";
-        };
-      };
-
       # mcp-publisher for publishing to MCP Registry
       mkMcpPublisher = pkgs: let
         version = "1.4.0";
@@ -209,7 +177,6 @@
             goreleaser
             go-mockery
             (mkGoTestCoverage pkgs)
-            (mkPythonKacl pkgs)
           ] ++ lib.optional (mkMcpCli pkgs != null) (mkMcpCli pkgs)
             ++ lib.optional (mkMcpPublisher pkgs != null) (mkMcpPublisher pkgs);
         };

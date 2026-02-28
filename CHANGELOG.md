@@ -55,3 +55,6 @@ and this project adheres to
 [0.2.0]: https://github.com/claytono/go-unifi-mcp/releases/tag/v0.2.0
 [0.1.1]: https://github.com/claytono/go-unifi-mcp/releases/tag/v0.1.1
 [0.1.0]: https://github.com/claytono/go-unifi-mcp/releases/tag/v0.1.0
+
+<!-- Versions 0.1.0–0.2.0 were released from the upstream repo (claytono/go-unifi-mcp).
+     Fork releases (cameronsjo/go-unifi-mcp) begin at 0.3.0. -->
