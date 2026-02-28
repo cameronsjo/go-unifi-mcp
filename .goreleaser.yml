@@ -34,19 +34,19 @@ checksum:
 brews:
   - name: go-unifi-mcp
     description: MCP server for UniFi Network Controller
-    homepage: https://github.com/claytono/go-unifi-mcp
+    homepage: https://github.com/cameronsjo/go-unifi-mcp
     license: MPL-2.0
     url_template:
-      https://github.com/claytono/go-unifi-mcp/releases/download/{{ .Tag }}/{{
+      https://github.com/cameronsjo/go-unifi-mcp/releases/download/{{ .Tag }}/{{
       .ArtifactName }}
     directory: Formula
     repository:
-      owner: claytono
+      owner: cameronsjo
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     commit_author:
-      name: Clayton O'Neill
-      email: claytono@users.noreply.github.com
+      name: Cameron Sjo
+      email: cameronsjo@users.noreply.github.com
     test: |
       system "#{bin}/go-unifi-mcp", "--help"
     install: |
@@ -61,7 +61,7 @@ dockers_v2:
       - go-unifi-mcp
     dockerfile: Dockerfile
     images:
-      - ghcr.io/claytono/go-unifi-mcp
+      - ghcr.io/cameronsjo/go-unifi-mcp
     tags:
       - "v{{ .Version }}"
       - "{{ if not .IsSnapshot }}latest{{ else }}edge{{ end }}"
@@ -73,7 +73,7 @@ dockers_v2:
       "org.opencontainers.image.description":
         "MCP server for UniFi Network Controller"
       "org.opencontainers.image.version": "{{ .Version }}"
-      "org.opencontainers.image.source": "https://github.com/claytono/go-unifi-mcp"
+      "org.opencontainers.image.source": "https://github.com/cameronsjo/go-unifi-mcp"
       "org.opencontainers.image.revision": "{{ .FullCommit }}"
       "org.opencontainers.image.created": "{{ .Date }}"
       "io.modelcontextprotocol.server.name": "io.github.claytono/go-unifi-mcp"
