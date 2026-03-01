@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1](https://github.com/cameronsjo/go-unifi-mcp/compare/v0.3.0...v0.3.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* move release jobs into release-please workflow ([#9](https://github.com/cameronsjo/go-unifi-mcp/issues/9)) ([16ca515](https://github.com/cameronsjo/go-unifi-mcp/commit/16ca515671d2cb81d7e890a0f5e636ac55fe8f92))
+
 ## [0.3.0](https://github.com/cameronsjo/go-unifi-mcp/compare/v0.2.0...v0.3.0) (2026-03-01)
 
 
