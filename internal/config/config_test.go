@@ -245,3 +245,47 @@ func TestLoad_HTTPPortInvalid(t *testing.T) {
 		})
 	}
 }
+
+func TestLoad_RoleDefault(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_ROLE", "")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Empty(t, cfg.Role)
+}
+
+func TestLoad_RoleValid(t *testing.T) {
+	for _, role := range []string{"reader", "operator", "admin"} {
+		t.Run(role, func(t *testing.T) {
+			t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+			t.Setenv("UNIFI_API_KEY", "test-api-key")
+			t.Setenv("UNIFI_ROLE", role)
+
+			cfg, err := Load()
+			require.NoError(t, err)
+			assert.Equal(t, role, cfg.Role)
+		})
+	}
+}
+
+func TestLoad_RoleCaseInsensitive(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_ROLE", "Reader")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "reader", cfg.Role)
+}
+
+func TestLoad_RoleInvalid(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_ROLE", "superadmin")
+
+	_, err := Load()
+	assert.ErrorIs(t, err, ErrInvalidRole)
+	assert.Contains(t, err.Error(), "superadmin")
+}
