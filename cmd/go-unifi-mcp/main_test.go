@@ -50,7 +50,7 @@ func TestRunNewServerError(t *testing.T) {
 func TestRunServeError(t *testing.T) {
 	expectedErr := errors.New("serve")
 	r := baseRunner()
-	r.serve = func(s *mcpserver.MCPServer) error {
+	r.serve = func(s *mcpserver.MCPServer, cfg *config.Config) error {
 		return expectedErr
 	}
 
@@ -61,7 +61,7 @@ func TestRunServeError(t *testing.T) {
 func TestRunSuccess(t *testing.T) {
 	r := baseRunner()
 	called := false
-	r.serve = func(s *mcpserver.MCPServer) error {
+	r.serve = func(s *mcpserver.MCPServer, cfg *config.Config) error {
 		called = true
 		return nil
 	}
@@ -154,7 +154,7 @@ func TestUnknownFlagExitsWithCode2(t *testing.T) {
 
 func TestMainNoUsageOnRuntimeError(t *testing.T) {
 	r := baseRunner()
-	r.serve = func(s *mcpserver.MCPServer) error {
+	r.serve = func(s *mcpserver.MCPServer, cfg *config.Config) error {
 		return errors.New("connection lost")
 	}
 	buf := &bytes.Buffer{}
@@ -209,7 +209,7 @@ func baseRunner() runner {
 		newServer: func(opts server.Options) (*mcpserver.MCPServer, error) {
 			return nil, nil
 		},
-		serve: func(s *mcpserver.MCPServer) error {
+		serve: func(s *mcpserver.MCPServer, cfg *config.Config) error {
 			return nil
 		},
 	}

@@ -1,8 +1,16 @@
 package server
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"net"
+	"net/http"
 	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
+	"time"
 
 	"github.com/claytono/go-unifi-mcp/internal/config"
 	"github.com/claytono/go-unifi-mcp/internal/meta"
@@ -116,7 +124,55 @@ func NewClient(cfg *config.Config) (unifi.Client, error) {
 	return newUnifiClient(clientCfg)
 }
 
-// Serve starts the MCP server on stdio.
-func Serve(s *server.MCPServer) error {
+// shutdownTimeout is the maximum time to wait for in-flight requests during graceful shutdown.
+const shutdownTimeout = 10 * time.Second
+
+// Serve starts the MCP server using the transport specified in cfg.
+// In HTTP mode, it listens for SIGTERM/SIGINT and shuts down gracefully.
+func Serve(s *server.MCPServer, cfg *config.Config) error {
+	if cfg.Transport == "http" {
+		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+		defer stop()
+		return serveHTTP(ctx, s, cfg)
+	}
 	return server.ServeStdio(s)
+}
+
+// serveHTTP starts the MCP server over streamable HTTP. It blocks until ctx
+// is cancelled or the listener returns an error, then drains in-flight
+// requests within shutdownTimeout.
+func serveHTTP(ctx context.Context, s *server.MCPServer, cfg *config.Config) error {
+	httpServer := server.NewStreamableHTTPServer(s,
+		server.WithEndpointPath(cfg.HTTPPath),
+	)
+
+	mux := http.NewServeMux()
+	mux.Handle(cfg.HTTPPath, httpServer)
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"ok"}`))
+	})
+
+	addr := net.JoinHostPort(cfg.HTTPHost, strconv.Itoa(cfg.HTTPPort))
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: mux,
+	}
+
+	errCh := make(chan error, 1)
+	go func() {
+		log.Printf("Listening on %s%s", addr, cfg.HTTPPath)
+		errCh <- srv.ListenAndServe()
+	}()
+
+	select {
+	case err := <-errCh:
+		return err
+	case <-ctx.Done():
+		log.Printf("Shutting down HTTP server")
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+		defer cancel()
+		return srv.Shutdown(shutdownCtx)
+	}
 }
