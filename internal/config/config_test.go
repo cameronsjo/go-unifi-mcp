@@ -143,3 +143,95 @@ func TestLoad_LogLevelInvalid(t *testing.T) {
 	assert.ErrorIs(t, err, ErrInvalidLogLevel)
 	assert.Contains(t, err.Error(), "verbose")
 }
+
+func TestLoad_TransportDefault(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "stdio", cfg.Transport)
+}
+
+func TestLoad_TransportHTTP(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "http")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "http", cfg.Transport)
+}
+
+func TestLoad_TransportCaseInsensitive(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "HTTP")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "http", cfg.Transport)
+}
+
+func TestLoad_TransportInvalid(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "websocket")
+
+	_, err := Load()
+	assert.ErrorIs(t, err, ErrInvalidTransport)
+	assert.Contains(t, err.Error(), "websocket")
+}
+
+func TestLoad_HTTPDefaults(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "http")
+	t.Setenv("UNIFI_HTTP_HOST", "")
+	t.Setenv("UNIFI_HTTP_PORT", "")
+	t.Setenv("UNIFI_HTTP_PATH", "")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "0.0.0.0", cfg.HTTPHost)
+	assert.Equal(t, 8080, cfg.HTTPPort)
+	assert.Equal(t, "/mcp", cfg.HTTPPath)
+}
+
+func TestLoad_HTTPCustomValues(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_TRANSPORT", "http")
+	t.Setenv("UNIFI_HTTP_HOST", "127.0.0.1")
+	t.Setenv("UNIFI_HTTP_PORT", "9090")
+	t.Setenv("UNIFI_HTTP_PATH", "/api/mcp")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "127.0.0.1", cfg.HTTPHost)
+	assert.Equal(t, 9090, cfg.HTTPPort)
+	assert.Equal(t, "/api/mcp", cfg.HTTPPath)
+}
+
+func TestLoad_HTTPPortInvalid(t *testing.T) {
+	tests := []struct {
+		name string
+		port string
+	}{
+		{"not a number", "abc"},
+		{"zero", "0"},
+		{"negative", "-1"},
+		{"too high", "70000"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+			t.Setenv("UNIFI_API_KEY", "test-api-key")
+			t.Setenv("UNIFI_HTTP_PORT", tt.port)
+
+			_, err := Load()
+			assert.ErrorIs(t, err, ErrInvalidHTTPPort)
+		})
+	}
+}

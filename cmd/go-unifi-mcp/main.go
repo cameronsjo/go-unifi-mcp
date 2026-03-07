@@ -24,7 +24,7 @@ type runner struct {
 	loadConfig func() (*config.Config, error)
 	newClient  func(*config.Config) (unifi.Client, error)
 	newServer  func(server.Options) (*mcpserver.MCPServer, error)
-	serve      func(*mcpserver.MCPServer) error
+	serve      func(*mcpserver.MCPServer, *config.Config) error
 }
 
 func defaultRunner() runner {
@@ -54,6 +54,12 @@ Environment variables:
   UNIFI_VERIFY_SSL  Verify SSL certificates (default: true)
   UNIFI_LOG_LEVEL   go-unifi log level: disabled|trace|debug|info|warn|error (default: "error")
   UNIFI_TOOL_MODE   Tool registration mode: lazy|eager (default: "lazy")
+
+Transport (HTTP mode):
+  UNIFI_TRANSPORT   Transport mode: stdio|http (default: "stdio")
+  UNIFI_HTTP_HOST   HTTP listen address (default: "0.0.0.0")
+  UNIFI_HTTP_PORT   HTTP listen port (default: 8080)
+  UNIFI_HTTP_PATH   MCP endpoint path (default: "/mcp")
 `)
 }
 
@@ -121,5 +127,5 @@ func runWith(r runner) error {
 	}
 
 	// Start serving
-	return r.serve(s)
+	return r.serve(s, cfg)
 }
