@@ -107,6 +107,8 @@ func Load() (*Config, error) {
 	cfg.HTTPPath = os.Getenv("UNIFI_HTTP_PATH")
 	if cfg.HTTPPath == "" {
 		cfg.HTTPPath = "/mcp"
+	} else if cfg.HTTPPath[0] != '/' {
+		cfg.HTTPPath = "/" + cfg.HTTPPath
 	}
 
 	// Set default site

@@ -142,9 +142,7 @@ func Serve(s *server.MCPServer, cfg *config.Config) error {
 // is cancelled or the listener returns an error, then drains in-flight
 // requests within shutdownTimeout.
 func serveHTTP(ctx context.Context, s *server.MCPServer, cfg *config.Config) error {
-	httpServer := server.NewStreamableHTTPServer(s,
-		server.WithEndpointPath(cfg.HTTPPath),
-	)
+	httpServer := server.NewStreamableHTTPServer(s)
 
 	mux := http.NewServeMux()
 	mux.Handle(cfg.HTTPPath, httpServer)
@@ -156,8 +154,11 @@ func serveHTTP(ctx context.Context, s *server.MCPServer, cfg *config.Config) err
 
 	addr := net.JoinHostPort(cfg.HTTPHost, strconv.Itoa(cfg.HTTPPort))
 	srv := &http.Server{
-		Addr:    addr,
-		Handler: mux,
+		Addr:         addr,
+		Handler:      mux,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 60 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	errCh := make(chan error, 1)

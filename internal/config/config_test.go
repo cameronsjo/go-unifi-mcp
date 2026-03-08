@@ -214,6 +214,16 @@ func TestLoad_HTTPCustomValues(t *testing.T) {
 	assert.Equal(t, "/api/mcp", cfg.HTTPPath)
 }
 
+func TestLoad_HTTPPathNormalizesLeadingSlash(t *testing.T) {
+	t.Setenv("UNIFI_HOST", "https://192.168.1.1")
+	t.Setenv("UNIFI_API_KEY", "test-api-key")
+	t.Setenv("UNIFI_HTTP_PATH", "mcp")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	assert.Equal(t, "/mcp", cfg.HTTPPath)
+}
+
 func TestLoad_HTTPPortInvalid(t *testing.T) {
 	tests := []struct {
 		name string
