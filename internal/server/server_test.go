@@ -1,12 +1,20 @@
 package server
 
 import (
+	"context"
+	"fmt"
+	"io"
+	"net"
+	"net/http"
 	"os"
+	"syscall"
 	"testing"
+	"time"
 
 	"github.com/claytono/go-unifi-mcp/internal/config"
 	servermocks "github.com/claytono/go-unifi-mcp/internal/server/mocks"
 	"github.com/filipowm/go-unifi/unifi"
+	"github.com/mark3labs/mcp-go/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -188,4 +196,159 @@ func TestNewClient_CustomLogLevel(t *testing.T) {
 	_, _ = NewClient(cfg)
 	require.NotNil(t, captured)
 	assert.NotNil(t, captured.Logger)
+}
+
+func freePort(t *testing.T) int {
+	t.Helper()
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err)
+	port := l.Addr().(*net.TCPAddr).Port
+	require.NoError(t, l.Close())
+	return port
+}
+
+// startHTTPServer launches serveHTTP in a goroutine with the given config and
+// a cancellable context. Returns the base URL and a cancel func that triggers
+// graceful shutdown.
+func startHTTPServer(t *testing.T, cfg *config.Config) (baseURL string, cancel context.CancelFunc) {
+	t.Helper()
+	s := server.NewMCPServer("test", "0.0.0")
+	ctx, cancel := context.WithCancel(context.Background())
+
+	errCh := make(chan error, 1)
+	go func() {
+		errCh <- serveHTTP(ctx, s, cfg)
+	}()
+
+	addr := fmt.Sprintf("http://127.0.0.1:%d", cfg.HTTPPort)
+	require.Eventually(t, func() bool {
+		resp, err := http.Get(addr + "/health")
+		if err != nil {
+			return false
+		}
+		defer func() { _ = resp.Body.Close() }()
+		return resp.StatusCode == http.StatusOK
+	}, 2*time.Second, 50*time.Millisecond, "server did not start")
+
+	t.Cleanup(func() {
+		cancel()
+		// Drain the error channel so the goroutine exits
+		err := <-errCh
+		if err != nil && err != http.ErrServerClosed {
+			t.Errorf("unexpected server error: %v", err)
+		}
+	})
+
+	return addr, cancel
+}
+
+func TestServeHTTP_HealthEndpoint(t *testing.T) {
+	addr, _ := startHTTPServer(t, &config.Config{
+		Transport: "http",
+		HTTPHost:  "127.0.0.1",
+		HTTPPort:  freePort(t),
+		HTTPPath:  "/mcp",
+	})
+
+	resp, err := http.Get(addr + "/health")
+	require.NoError(t, err)
+	defer func() { _ = resp.Body.Close() }()
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	body, err := io.ReadAll(resp.Body)
+	require.NoError(t, err)
+	assert.JSONEq(t, `{"status":"ok"}`, string(body))
+}
+
+func TestServeHTTP_MCPEndpoint(t *testing.T) {
+	addr, _ := startHTTPServer(t, &config.Config{
+		Transport: "http",
+		HTTPHost:  "127.0.0.1",
+		HTTPPort:  freePort(t),
+		HTTPPath:  "/mcp",
+	})
+
+	// MCP endpoint should be registered (GET returns non-404)
+	resp, err := http.Get(addr + "/mcp")
+	require.NoError(t, err)
+	defer func() { _ = resp.Body.Close() }()
+	assert.NotEqual(t, http.StatusNotFound, resp.StatusCode)
+}
+
+func TestServeHTTP_CustomPath(t *testing.T) {
+	addr, _ := startHTTPServer(t, &config.Config{
+		Transport: "http",
+		HTTPHost:  "127.0.0.1",
+		HTTPPort:  freePort(t),
+		HTTPPath:  "/custom/mcp",
+	})
+
+	resp, err := http.Get(addr + "/custom/mcp")
+	require.NoError(t, err)
+	defer func() { _ = resp.Body.Close() }()
+	assert.NotEqual(t, http.StatusNotFound, resp.StatusCode)
+}
+
+func TestServe_HTTPWithSignal(t *testing.T) {
+	port := freePort(t)
+	cfg := &config.Config{
+		Transport: "http",
+		HTTPHost:  "127.0.0.1",
+		HTTPPort:  port,
+		HTTPPath:  "/mcp",
+	}
+
+	s := server.NewMCPServer("test", "0.0.0")
+
+	errCh := make(chan error, 1)
+	go func() {
+		errCh <- Serve(s, cfg)
+	}()
+
+	addr := fmt.Sprintf("http://127.0.0.1:%d", port)
+	require.Eventually(t, func() bool {
+		resp, err := http.Get(addr + "/health")
+		if err != nil {
+			return false
+		}
+		defer func() { _ = resp.Body.Close() }()
+		return resp.StatusCode == http.StatusOK
+	}, 2*time.Second, 50*time.Millisecond, "server did not start")
+
+	// Send SIGINT to ourselves to trigger graceful shutdown
+	require.NoError(t, syscall.Kill(syscall.Getpid(), syscall.SIGINT))
+
+	select {
+	case err := <-errCh:
+		// http.ErrServerClosed is expected on graceful shutdown
+		if err != nil && err != http.ErrServerClosed {
+			t.Fatalf("unexpected error: %v", err)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("Serve did not return after SIGINT")
+	}
+}
+
+func TestServeHTTP_GracefulShutdown(t *testing.T) {
+	addr, cancel := startHTTPServer(t, &config.Config{
+		Transport: "http",
+		HTTPHost:  "127.0.0.1",
+		HTTPPort:  freePort(t),
+		HTTPPath:  "/mcp",
+	})
+
+	// Server is up
+	resp, err := http.Get(addr + "/health")
+	require.NoError(t, err)
+	defer func() { _ = resp.Body.Close() }()
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+	// Cancel triggers shutdown
+	cancel()
+
+	// Server should stop accepting connections
+	require.Eventually(t, func() bool {
+		_, err := http.Get(addr + "/health")
+		return err != nil
+	}, 2*time.Second, 50*time.Millisecond, "server did not shut down")
 }
