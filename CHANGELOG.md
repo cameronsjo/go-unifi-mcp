@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/cameronsjo/go-unifi-mcp/compare/v0.3.1...v0.4.0) (2026-04-01)
+
+
+### Features
+
+* **rbac:** add role-based tool filtering via UNIFI_ROLE ([142ec88](https://github.com/cameronsjo/go-unifi-mcp/commit/142ec8875fa6223a28f918e9596f06d81d0057f4))
+* **rbac:** add role-based tool filtering via UNIFI_ROLE ([e484aa4](https://github.com/cameronsjo/go-unifi-mcp/commit/e484aa4fc8662d256000c4f9e56a42695fc79e74))
+* **server:** add HTTP transport for agentgateway deployment ([93e67af](https://github.com/cameronsjo/go-unifi-mcp/commit/93e67aff17cc87179041b67a3cec18443d3106aa))
+* **server:** add streamable HTTP transport for agentgateway deployment ([ce26b1e](https://github.com/cameronsjo/go-unifi-mcp/commit/ce26b1e57228f31a649b5e562e735dddc6005588))
+
+
+### Bug Fixes
+
+* resolve merge conflicts with main ([f9d9bb0](https://github.com/cameronsjo/go-unifi-mcp/commit/f9d9bb070b24d4a30d2624682c19345e0ea09a2a))
+* **server:** address CodeRabbit review findings on HTTP transport ([cc9ffda](https://github.com/cameronsjo/go-unifi-mcp/commit/cc9ffdab72291011117e116a5ef172d90423a339))
+
 ## [0.3.1](https://github.com/cameronsjo/go-unifi-mcp/compare/v0.3.0...v0.3.1) (2026-03-01)
 
 
