@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/claytono/go-unifi-mcp/internal/config"
+	"github.com/claytono/go-unifi-mcp/internal/rbac"
 	"github.com/claytono/go-unifi-mcp/internal/server"
 	"github.com/filipowm/go-unifi/unifi"
 	mcpserver "github.com/mark3labs/mcp-go/server"
@@ -60,6 +61,9 @@ Transport (HTTP mode):
   UNIFI_HTTP_HOST   HTTP listen address (default: "0.0.0.0")
   UNIFI_HTTP_PORT   HTTP listen port (default: 8080)
   UNIFI_HTTP_PATH   MCP endpoint path (default: "/mcp")
+
+Access control:
+  UNIFI_ROLE        RBAC role: reader|operator|admin (default: no filtering)
 `)
 }
 
@@ -125,6 +129,9 @@ func runWith(r runner) error {
 	if err != nil {
 		return err
 	}
+
+	// Apply RBAC filtering
+	rbac.Apply(s, cfg.Role)
 
 	// Start serving
 	return r.serve(s, cfg)

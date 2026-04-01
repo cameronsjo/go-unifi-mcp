@@ -14,6 +14,7 @@ var (
 	ErrInvalidLogLevel    = errors.New("UNIFI_LOG_LEVEL must be one of: disabled, trace, debug, info, warn, error")
 	ErrInvalidTransport   = errors.New("UNIFI_TRANSPORT must be one of: stdio, http")
 	ErrInvalidHTTPPort    = errors.New("UNIFI_HTTP_PORT must be a valid port number (1-65535)")
+	ErrInvalidRole        = errors.New("UNIFI_ROLE must be one of: reader, operator, admin")
 )
 
 var validLogLevels = map[string]bool{
@@ -30,6 +31,12 @@ var validTransports = map[string]bool{
 	"http":  true,
 }
 
+var validRoles = map[string]bool{
+	"reader":   true,
+	"operator": true,
+	"admin":    true,
+}
+
 // Config holds the MCP server configuration.
 type Config struct {
 	Host      string // UNIFI_HOST - UniFi controller URL
@@ -44,6 +51,8 @@ type Config struct {
 	HTTPHost  string // UNIFI_HTTP_HOST - HTTP listen address (default: "0.0.0.0")
 	HTTPPort  int    // UNIFI_HTTP_PORT - HTTP listen port (default: 8080)
 	HTTPPath  string // UNIFI_HTTP_PATH - MCP endpoint path (default: "/mcp")
+
+	Role string // UNIFI_ROLE - RBAC role: reader, operator, admin (default: "" = no filtering)
 }
 
 // Load loads configuration from environment variables.
@@ -109,6 +118,15 @@ func Load() (*Config, error) {
 		cfg.HTTPPath = "/mcp"
 	} else if cfg.HTTPPath[0] != '/' {
 		cfg.HTTPPath = "/" + cfg.HTTPPath
+	}
+
+	// Parse UNIFI_ROLE
+	if v := os.Getenv("UNIFI_ROLE"); v != "" {
+		v = strings.ToLower(v)
+		if !validRoles[v] {
+			return nil, fmt.Errorf("%w: got %q", ErrInvalidRole, v)
+		}
+		cfg.Role = v
 	}
 
 	// Set default site
